@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduNexcus</title>
+  
+  <!-- External Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Lobster&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+/* Global Styles */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f9f9f9;
+    display: flex; /* Enable flexbox */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+    color: #212121;
+    margin-bottom: 10px;
+  }
+  
+  p {
+    margin-bottom: 20px;
+  }
+  
+  a {
+    text-decoration: none;
+    color: #337ab7;
+  }
+  
+  a:hover {
+    color: #23527c;
+  }
+  
+  /* Form Styles */
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  input[type="text"], input[type="email"], input[type="password"] {
+    width: 100%;
+    height: 40px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+  }
+  
+  input[type="checkbox"] {
+    margin-right: 10px;
+  }
+  
+  button[type="submit"] {
+    background-color: #337ab7;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #23527c;
+  }
+  
+  /* Dashboard Styles */
+  
+  .dashboard {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .dashboard-item {
+    margin: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    width: calc(33.33% - 40px);
+  }
+  
+  .dashboard-item:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .dashboard-item .title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  /* Modal Styles */
+  
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .modal-content {
+    background-color: #fff;
+    margin: 20% auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    width: 80%;
+  }
+  
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover, .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  /* Other Styles */
+  
+  .student-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .student-list li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .student-list li:last-child {
+    border-bottom: none;
+  }
+/* Form Container */
+.form-container {
+    background: linear-gradient(135deg, #bce9f5, #ffffff); /* Gradient background */
+    padding: 30px;
+    border-radius: 20px; /* More rounded corners */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    width: 320px; /* Slightly wider */
+    text-align: center;
+    transition: transform 0.3s; /* Add transition for scaling effect */
+}
+  
+  /* Form Group */
+  .form-group {
+    margin-bottom: 15px;
+    text-align: left;
+  }
+  
+  /* Input Fields */
+  .form-group input {
+    border-radius: 15px; /* More rounded corners */
+    border: 2px solid #ccc; /* Thicker border */
+    transition: border-color 0.3s, box-shadow 0.3s; /* Smooth border color transition */
+}
+  .form-group select {
+    width: calc(100% - 20px); /* Full width minus padding */
+    padding: 10px;
+    border: 2px solid #ccc; /* Thicker border */
+    border-radius: 15px; /* More rounded corners */
+    font-size: 14px;
+    transition: border-color 0.3s, box-shadow 0.3s; /* Smooth border color transition */
+  }
+  
+ /* Input Focus Effect */
+.form-group input:focus {
+    border-color: #0b002b; /* Change border color on focus */
+    outline: none; /* Remove default outline */
+    box-shadow: 0 0 5px rgba(11, 2, 32, 0.5); /* Add shadow on focus */
+}
+  
+ /* Form Header */
+.form-header {
+    margin-bottom: 10px;
+    font-size: 24px; /* Larger font size for header */
+    font-weight: bold;
+    color: #0b002b; /* Darker text color */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+}
+/* Button Styles */
+.btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #0b002b; /* Dark background color */
+    color: #ffffff;
+    font-size: 16px; /* Slightly larger font size */
+    font-weight: bold;
+    border: none;
+    border-radius: 25px; /* More rounded button */
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s; /* Add transform and shadow effects */
+    position: relative;
+    overflow: hidden; /* To contain the pseudo-element */
+}
+
+.btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    height: 300%;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.5s ease;
+    z-index: 0; /* Behind the text */
+}
+
+.btn:hover::after {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.btn:hover {
+    background-color: #3b3b3b; /* Darker background on hover */
+    transform: translateY(-3px); /* Slight lift effect */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+}
+
+.btn:active {
+    transform: translateY(1px); /* Button press effect */
+    box-shadow: none; /* Remove shadow when pressed */
+    transition: none; /* Disable transition on active */
+}
+  /* Message Styles */
+  .message {
+    margin: 10px 0;
+    color: #d32f2f;
+    font-size: 14px; /* Slightly larger font size */
+    font-weight: bold;
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 400px) {
+    .form-container {
+      width: 90%; /* Full width on small screens */
+    }
+  }
+  .message {
+    margin: 10px 0;
+    color: #d32f2f;
+    font-size: 13px;
+    font-weight: bold;
+  }
+  .form {
+    display: none;
+  }
+  .form.active {
+    display: block;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+  }
+  th {
+    background-color: #f2f2f2;
+  }
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(11, 2, 32, 0.4);
+    padding-top: 60px;
+  }
+  .modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+  }
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  #calendar {
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="form-container">
+    <div id="message" class="message"></div>
+    <img src="C:\Users\ACER\EduNexcus\Logo Sa EduTrack 3-01.png" alt="Logo" style="width: 50px; height: auto; margin-bottom: 0px;">
+    
+    <!-- Sign-Up Form -->
+    <form id="signup-form" class="form active" aria-labelledby="signup-header">
+      <div class="form-header" id="signup-header"><h2><b>EduNexus</b></h2><br>Create Account</br></div> 
+      <div class="form-group">
+        <label for="signup-name">Name</label>
+        <input type="text" id="signup-name" name="name" placeholder="Enter your name" required aria-required="true">
+      </div>
+      <div class="form-group">
+        <label for="signup-username">Username</label>
+        <input type="text" id="signup-username" name="username" placeholder="Enter your username" required aria-required="true">
+      </div>
+      <div class="form-group">
+        <label for="signup-email">Email</label>
+        <input type="email" id="signup-email" name="email" placeholder="Enter your email" required aria-required="true">
+      </div>
+      <div class="form-group">
+        <label for="signup-password">Password</label>
+        <input type="password" id="signup-password" name="password" placeholder="6+ characters" required aria-required="true">
+      </div>
+      <div class="form-group" style="display: flex; align-items: center;">
+        <input type="checkbox" id="signup-terms" name="terms" required aria-required="true">
+        <label for="signup-terms">I agree to the Terms and Conditions</label>
+      </div>
+      <button type="button" id="signup-button" class="btn">Create Account</button>
+      <div class="form-footer">
+        Already have an account? <a href="#" id="show-signin">Sign In</a>
+      </div>
+    </form>
+
+    <!-- Sign-In Form -->
+    <form id="signin-form" class="form" aria-labelledby="signin-header">
+      <div class="form-header" id="signin-header">Sign In</div>
+      <div class="form-group">
+        <label for="signin-email">Email</label>
+        <input type="email" id="signin-email" name="email" placeholder="Enter your email" required aria-required="true">
+      </div>
+      <div class="form-group">
+        <label for="signin-password">Password</label>
+        <input type="password" id="signin-password" name="password" placeholder="Enter your password" required aria-required="true">
+      </div>
+      <button type="button" id="signin-button" class="btn">Sign In</button>
+      <div class="form-footer">
+        Don't have an account? <a href="#" id="show-signup">Sign Up</a>
+      </div>
+    </form>
+
+    <!-- Role Selection UI -->
+    <div id="role-selection" class="form" aria-labelledby="role-selection-header">
+      <div class="form-header" id="role-selection-header">Select Your Role</div>
+      <div class="form-group">
+        <button id="role-teacher" class="btn">Teacher</button>
+      </div>
+      <div class="form-group">
+        <button id="role-student" class="btn">Student</button>
+      </div>
+      <div class ="form-group">
+        <button id="role-parent" class="btn">Parent</button>
+      </div>
+    </div>
+
+    <!-- Teacher Dashboard -->
+    <div id="teacher-dashboard" class="form" aria-labelledby="teacher-dashboard-header">
+      <h1 id="teacher-dashboard-header">Welcome, <span id="teacher-display-name"></span>!</h1>
+      <div class="form-group">
+        <button id="view-students" class="btn">View Students</button>
+      </div>
+      <div class="form-group">
+        <button id="add-students" class="btn">Add New Set of Students</button>
+      </div>
+      <div id="upload-student-file" class="form-group" style="display: none;">
+        <label for="student-file">Upload Student Excel File</label>
+        <input type="file" id="student-file" aria-label="Upload student file">
+        <button id="save-student-file" class="btn">Save File</button>
+      </div>
+      <div id="view-student-list" class="form-group" style="display: none;">
+        <h4>Student List</h4>
+        <table id="student-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Grades</th>
+              <th>Balance</th>
+              <th>Lacking Output</th>
+            </tr>
+          </thead>
+          <tbody id="student-list"></tbody>
+        </table>
+      </div>
+      <button id="logout-button" class="btn">Logout</button>
+    </div>
+
+    <!-- Student Dashboard -->
+    <div id="student-dashboard" class="form" aria-labelledby="student-dashboard-header">
+      <div class="form-header" id="student-dashboard-header">Student Dashboard</div>
+      <div class="form-group">
+        <label for="teacher-name">Teacher's Name</label>
+        <input type="text" id="teacher-name" placeholder="Enter Teacher's Name" required aria-required="true">
+      </div>
+      <div class="form-group">
+        <label for="class-password">Class Password</label>
+        <input type="password" id="class-password" placeholder="Enter Class Password" required aria-required="true">
+      </div>
+      <div class="form-group">
+        <button id="view-grades" class="btn">View My Grades</button>
+      </div>
+      <div class="form-group">
+        <button id="payment-tracking" class="btn">Payment & Expense Tracking</button>
+      </div>
+      <div class="form-group">
+        <button id="deadline-calendar" class="btn">Deadline & Task Management</button>
+      </div>
+      <div class="form-group">
+        <button id="progress-dashboard" class="btn">Progress Dashboard</button>
+      </div>
+    </div>
+
+    <!-- Parent Dashboard -->
+    <div id="parent-dashboard" class="form" aria-labelledby="parent-dashboard-header">
+      <div class="form-header" id="parent-dashboard-header">Parent Dashboard</div>
+      <div class="form-group">
+        <label for="child-search">Search for Your Child</label>
+        <input type="text" id="child-search" placeholder="Enter child's name" required aria-required="true">
+      </div>
+      <div class="form-group">
+        <label for="child-passcode">Enter Child's Passcode</label>
+        <input type="password" id="child-passcode" placeholder="Enter passcode" required aria-required="true">
+      </div>
+      <div class="form-group">
+        <button id="view-grade" class="btn">View Grade</button>
+      </div>
+      <div id="child-grade" class="form-group" style="display: none;">
+        <h4>Child's Information</h4>
+        <p><strong>Grade: </strong><span id="grade-display"></span></p>
+        <p><strong>Missing Outputs: </strong><span id="missing-outputs-display"></span></p>
+        <p><strong>Pending Balance: </strong><span id="pending-balance-display"></span></p>
+      </div>
+    </div>
+
+    <!-- Modal for Payment and Expense Tracking -->
+    <div id="payment-modal" class="modal" aria-labelledby="payment-modal-header">
+      <div class="modal-content">
+        <span class="close" id="close-payment-modal">&times;</span>
+        <h2 id="payment-modal-header">Payment & Expense Tracking</h2>
+        <p>Current Balance: <span id="current-balance">0</span></p>
+        <button class="btn" id ="confirm-payment">Confirm Payment</button>
+      </div>
+    </div>
+
+    <!-- Modal for Deadline & Task Management -->
+    <div id="calendar-modal" class="modal" aria-labelledby="calendar-modal-header">
+      <div class="modal-content">
+        <span class="close" id="close-calendar-modal">&times;</span>
+        <h2 id="calendar-modal-header">Deadline & Task Management</h2>
+        <div id="calendar"></div>
+      </div>
+    </div>
+
+    <!-- Modal for Progress Dashboard -->
+    <div id="progress-modal" class="modal" aria-labelledby="progress-modal-header">
+      <div class="modal-content">
+        <span class="close" id="close-progress-modal">&times;</span>
+        <h2 id="progress-modal-header">Progress Dashboard</h2>
+        <p>View your academic progress here.</p>
+        <button class="btn" id="view-progress">View Progress</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  const signupForm = document.getElementById('signup-form');
+const signinForm = document.getElementById('signin-form');
+const roleSelection = document.getElementById('role-selection');
+const messageDiv = document.getElementById('message');
+const signupButton = document.getElementById('signup-button');
+const signinButton = document.getElementById('signin-button');
+const showSigninLink = document.getElementById ('show-signin');
+const showSignupLink = document.getElementById('show-signup');
+const teacherButton = document.getElementById('role-teacher');
+const studentButton = document.getElementById('role-student');
+const parentButton = document.getElementById('role-parent');
+const teacherDashboard = document.getElementById('teacher-dashboard');
+const studentDashboard = document.getElementById('student-dashboard');
+const parentDashboard = document.getElementById('parent-dashboard');
+const childSearch = document.getElementById('child-search');
+const childPasscode = document.getElementById('child-passcode');
+const gradeDisplay = document.getElementById('grade-display');
+const missingOutputsDisplay = document.getElementById('missing-outputs-display');
+const pendingBalanceDisplay = document.getElementById('pending-balance-display');
+const childGrade = document.getElementById('child-grade');
+const viewGradeButton = document.getElementById('view-grade');
+const studentList = document.getElementById('student-list');
+const uploadStudentFileDiv = document.getElementById('upload-student-file');
+const studentFileInput = document.getElementById('student-file');
+const saveStudentFileButton = document.getElementById('save-student-file');
+const logoutButton = document.getElementById('logout-button');
+
+let students = []; // Array to store student data
+let currentBalance = 0; // Initialize balance
+
+signupButton.addEventListener('click', handleSignup);
+signinButton.addEventListener('click', handleSignin);
+showSigninLink.addEventListener('click', showSigninForm);
+showSignupLink.addEventListener('click', showSignupForm);
+teacherButton.addEventListener('click', showTeacherDashboard);
+studentButton.addEventListener('click', showStudentDashboard);
+parentButton.addEventListener('click', showParentDashboard);
+viewGradeButton.addEventListener('click', viewChildGrade);
+document.getElementById('view-students').addEventListener('click', showStudentList);
+document.getElementById('add-students').addEventListener('click', () => {
+  uploadStudentFileDiv.style.display = 'block';
+});
+saveStudentFileButton.addEventListener('click', saveStudentFile);
+logoutButton.addEventListener('click', logout);
+
+// Student Dashboard Button Event Listeners
+document.getElementById('view-grades').addEventListener('click', viewMyGrades);
+document.getElementById('payment-tracking').addEventListener('click', openPaymentModal);
+document.getElementById('deadline-calendar').addEventListener('click', openCalendarModal);
+document.getElementById('progress-dashboard').addEventListener('click', openProgressModal);
+
+// Modal Close Event Listeners
+document.getElementById('close-payment-modal').onclick = closePaymentModal;
+document.getElementById('close-calendar-modal').onclick = closeCalendarModal;
+document.getElementById('close-progress-modal').onclick = closeProgressModal;
+
+// Initialize Calendar
+$(document).ready(function() {
+  $('#calendar').fullCalendar({
+    header: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'month,agendaWeek,agendaDay'
+    },
+    selectable: true,
+    select: function(start, end) {
+      const title = prompt('Enter Task Title:');
+      if (title) {
+        const eventData = {
+          title: title,
+          start: start,
+          end: end
+        };
+        $('#calendar').fullCalendar('renderEvent', eventData, true);
+      }
+      $('#calendar').fullCalendar('unselect');
+    },
+    events: [] // You can load events from a database or local storage
+  });
+});
+
+function handleSignup() {
+  const name = document.getElementById('signup-name').value.trim();
+  const username = document.getElementById('signup-username').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const password = document.getElementById('signup-password').value.trim();
+  const terms = document.getElementById('signup-terms').checked;
+
+  if (!name || !username || !email || !password || !terms) {
+    messageDiv.textContent = 'Please fill out all fields and agree to the terms and conditions.';
+    return;
+  }
+
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailPattern.test(email)) {
+    messageDiv.textContent = 'Please enter a valid email address.';
+    return;
+  }
+
+  if (password.length < 6) {
+    messageDiv.textContent = 'Password must be at least 6 characters long.';
+    return;
+  }
+
+  localStorage.setItem('user', JSON.stringify({ name, username, email, password }));
+  messageDiv.textContent = '';
+  roleSelection.classList .add('active');
+  signupForm.classList.remove('active');
+}
+
+function handleSignin() {
+  const email = document.getElementById('signin-email').value.trim();
+  const password = document.getElementById('signin-password').value.trim();
+
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (user && user.email === email && user.password === password) {
+    messageDiv.textContent = '';
+    roleSelection.classList.add('active');
+    signinForm.classList.remove('active');
+  } else {
+    messageDiv.textContent = 'Invalid email or password.';
+  }
+}
+
+function showSigninForm() {
+  signupForm.classList.remove('active');
+  signinForm.classList.add('active');
+  messageDiv.textContent = '';
+}
+
+function showSignupForm() {
+  signinForm.classList.remove('active');
+  signupForm.classList.add('active');
+  messageDiv.textContent = '';
+}
+
+function showTeacherDashboard() {
+  roleSelection.classList.remove('active');
+  teacherDashboard.classList.add('active');
+  document.getElementById('teacher-display-name').textContent = JSON.parse(localStorage.getItem('user')).name;
+}
+
+function showStudentDashboard() {
+  roleSelection.classList.remove('active');
+  studentDashboard.classList.add('active');
+}
+
+function showParentDashboard() {
+  roleSelection.classList.remove('active');
+  parentDashboard.classList.add('active');
+}
+
+function viewChildGrade() {
+  const childName = childSearch.value.trim();
+  const passcode = childPasscode.value.trim();
+
+  // Simulated data for demonstration
+  const childData = {
+    'Child 1': { grade: 'A', missingOutputs: '2', pendingBalance: '100' },
+    'Child 2': { grade: 'B+', missingOutputs: '1', pendingBalance: '50' },
+    'Child 3': { grade: 'A-', missingOutputs: '0', pendingBalance: '0' }
+  };
+
+  if (childData[childName]) {
+    // Check passcode (for demonstration, we assume all passcodes are "1234")
+    if (passcode === '1234') {
+      gradeDisplay.textContent = childData[childName].grade;
+      missingOutputsDisplay.textContent = childData[childName].missingOutputs;
+      pendingBalanceDisplay.textContent = childData[childName].pendingBalance;
+      childGrade.style.display = 'block';
+    } else {
+      alert('Invalid passcode. Please try again.');
+    }
+  } else {
+    alert('Child not found. Please check the name.');
+  }
+}
+
+function showStudentList() {
+  studentList.innerHTML = ''; // Clear existing list
+  if (students.length === 0) {
+    studentList.innerHTML = '<tr><td colspan="4">No students added yet.</td></tr>';
+  } else {
+    students.forEach(student => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${student.name}</td>
+        <td><input type="text" placeholder="Enter Grade" data-student="${student.name}" class="grade-input"></td>
+        <td><input type="text" placeholder="Remaining Balance" data-student="${student.name}" class="balance-input"></td>
+        <td><input type="text" placeholder="Lacking Output" data-student="${student.name}" class="output-input"></td>
+      `;
+      studentList.appendChild(tr);
+    });
+  }
+  document.getElementById('view-student-list').style.display = 'block';
+}
+
+function saveStudentFile() {
+  const file = studentFileInput.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      const data = new Uint8Array(event.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+      const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+      students = jsonData.slice(1).map(row => ({ name: row[0], grades: [], balance: 0, output: '' })); // Assuming first column is student name
+      uploadStudentFileDiv.style.display = 'none';
+      showStudentList();
+    };
+    reader.readAsArrayBuffer(file);
+  } else {
+    alert('Please upload a file.');
+  }
+}
+
+function logout() {
+  localStorage.removeItem('user'); // Clear user data
+  roleSelection.classList.remove('active');
+  teacherDashboard.classList.remove('active');
+  studentDashboard.classList.remove('active');
+  parentDashboard.classList.remove('active');
+  signupForm.classList.add('active'); // Redirect to signup
+}
+
+// Student Dashboard Functions
+function viewMyGrades() {
+  alert("Displaying grades for the student.");
+  // Implement logic to fetch and display grades
+}
+
+function openPaymentModal() {
+  document.getElementById('payment-modal').style.display = 'block';
+  document.getElementById('current-balance').textContent = currentBalance; // Display current balance
+}
+
+function closePaymentModal() {
+  document.getElementById('payment-modal').style.display = 'none';
+}
+
+document.getElementById('confirm-payment').addEventListener('click', function() {
+  const paymentAmount = prompt("Enter payment amount:");
+  if (paymentAmount && !isNaN(paymentAmount)) {
+    currentBalance -= parseFloat(paymentAmount);
+    alert(`Payment of ${paymentAmount} made. New balance: ${currentBalance}`);
+    document.getElementById('current-balance').textContent = currentBalance; // Update balance display
+  } else {
+    alert("Invalid payment amount.");
+  }
+});
+
+function openCalendarModal() {
+  document.getElementById('calendar-modal').style.display = 'block';
+}
+
+function closeCalendarModal() {
+  document.getElementById('calendar-modal').style.display = 'none';
+}
+
+function openProgressModal() {
+  document.getElementById('progress-modal').style.display = 'block';
+}
+
+function closeProgressModal() {
+  document.getElementById('progress-modal').style.display = 'none';
+}
+</script>
+</body>
+</html>
